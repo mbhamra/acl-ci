@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+ 
 class Reports extends My_Controller {
 
     public function __construct() {
