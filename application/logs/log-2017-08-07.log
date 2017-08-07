@@ -1,0 +1,35 @@
+INFO - 2017-08-07 13:39:59 --> Config Class Initialized
+INFO - 2017-08-07 13:39:59 --> Hooks Class Initialized
+DEBUG - 2017-08-07 13:39:59 --> UTF-8 Support Enabled
+INFO - 2017-08-07 13:39:59 --> Utf8 Class Initialized
+INFO - 2017-08-07 13:39:59 --> URI Class Initialized
+INFO - 2017-08-07 13:39:59 --> Router Class Initialized
+INFO - 2017-08-07 13:39:59 --> Output Class Initialized
+INFO - 2017-08-07 13:39:59 --> Security Class Initialized
+DEBUG - 2017-08-07 13:39:59 --> Global POST, GET and COOKIE data sanitized
+INFO - 2017-08-07 13:39:59 --> Input Class Initialized
+INFO - 2017-08-07 13:39:59 --> Language Class Initialized
+INFO - 2017-08-07 13:39:59 --> Loader Class Initialized
+INFO - 2017-08-07 13:39:59 --> Database Driver Class Initialized
+INFO - 2017-08-07 13:39:59 --> Helper loaded: form_helper
+INFO - 2017-08-07 13:39:59 --> Form Validation Class Initialized
+DEBUG - 2017-08-07 13:39:59 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+INFO - 2017-08-07 13:39:59 --> Session: Class initialized using 'files' driver.
+INFO - 2017-08-07 13:39:59 --> Email Class Initialized
+INFO - 2017-08-07 13:39:59 --> Controller Class Initialized
+DEBUG - 2017-08-07 13:39:59 --> Reports - index<br />
+INFO - 2017-08-07 13:39:59 --> Language file loaded: language/english/profiler_lang.php
+INFO - 2017-08-07 13:39:59 --> Profiler Class Initialized
+INFO - 2017-08-07 13:39:59 --> Helper loaded: text_helper
+INFO - 2017-08-07 13:39:59 --> Final output sent to browser
+DEBUG - 2017-08-07 13:39:59 --> Total execution time: 0.0189
+DEBUG - 2017-08-07 13:40:39 --> UTF-8 Support Enabled
+DEBUG - 2017-08-07 13:40:39 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2017-08-07 13:40:39 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+DEBUG - 2017-08-07 13:40:39 --> Reports - index<br />
+DEBUG - 2017-08-07 13:40:39 --> Total execution time: 0.0154
+DEBUG - 2017-08-07 13:43:04 --> UTF-8 Support Enabled
+DEBUG - 2017-08-07 13:43:04 --> Global POST, GET and COOKIE data sanitized
+DEBUG - 2017-08-07 13:43:04 --> Session: "sess_save_path" is empty; using "session.save_path" value from php.ini.
+DEBUG - 2017-08-07 13:43:04 --> Reports - index<br />
+DEBUG - 2017-08-07 13:43:04 --> Total execution time: 0.0155
