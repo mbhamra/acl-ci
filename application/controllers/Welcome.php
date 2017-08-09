@@ -9,7 +9,7 @@ class Welcome extends My_Controller {
 	}
 	public function index()
 	{
-        
+            log_message('info','message');
 		$this->load->view('welcome_message');
 	}
 }
