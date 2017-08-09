@@ -4,16 +4,11 @@ class Acl extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        //$this->load->library('acl');
+        $this->load->model('AclModel');
     }
 
     public function index() {
         exit(__FUNCTION__);
-        $this->acl->read();
-        $r = new ReflectionClass($class);
-        $doc = $r->getDocComment();
-        preg_match_all('#@(.*?)\n#s', $doc, $annotations);
-        return $annotations[1];
     }
 
     public function fetch() {
@@ -42,7 +37,12 @@ class Acl extends MY_Controller {
                 include_once($dir.'/'.$ff);
                 foreach($classes AS $class){
                     $methods = $this->get_class_methods($class, true);
-                    //$this->AclModel->checkInsert($class, $method);
+                    foreach($methods as $method){
+                        if(isset($method['docComment']['AclName'])){
+                            $this->AclModel->save(['class'=>$class, 'method'=>$method['name'], 'display_name'=>$method['docComment']['AclName']]);
+                        }
+                    }
+                    
                 }
             }
             if ($i > 5)
@@ -93,7 +93,8 @@ class Acl extends MY_Controller {
         preg_match_all($pattern, $comment, $matches, PREG_PATTERN_ORDER);
         $comments = [];
         foreach($matches[0] as $match){
-            $comments[] = preg_split('/[\s]/',$match, 2);
+            $comment = preg_split('/[\s]/',$match, 2);
+            $comments[trim($comment[0],'@')] = $comment[1];
         }
         
         return $comments;
