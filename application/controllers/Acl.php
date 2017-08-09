@@ -23,6 +23,7 @@ class Acl extends MY_Controller {
     public function listFolderFiles($dir = null) {
         if ($dir === null)
             $dir = constant('APPPATH') . 'controllers/';
+        
         $ffs = scandir($dir);
 
         unset($ffs[0], $ffs[1]);
@@ -31,26 +32,25 @@ class Acl extends MY_Controller {
             return;
 
         $i = 0;
-        echo '<ol>';
+        
         foreach ($ffs as $ff) {
-
 
             if (is_dir($dir . '/' . $ff))
                 $this->listFolderFiles($dir . '/' . $ff);
-            elseif (is_file($dir . '/' . $ff)) {
+            elseif (is_file($dir . '/' . $ff) && strpos($ff,'.php') !== false) {
                 $classes = $this->get_php_classes(file_get_contents($dir . '/' . $ff));
-                
-                echo '<hr />';
+                include_once($dir.'/'.$ff);
+                foreach($classes AS $class){
+                    $methods = $this->get_class_methods($class, true);
+                    //$this->AclModel->checkInsert($class, $method);
+                }
             }
-
-
-
             if ($i > 5)
                 break;
             else
                 $i++;
         }
-        echo '</ol>';
+        
     }
 
     public function get_php_classes($php_code, $methods = false) {
@@ -67,14 +67,35 @@ class Acl extends MY_Controller {
         return $classes;
     }
 
-    public function get_class_methods($class){
+    public function get_class_methods($class, $comment = false){
         $r = new ReflectionClass($class);
         
         foreach($r->getMethods() AS $m){
-            if($m->class == $class)
-                $methods[] = $m->name;
+            if($m->class == $class){
+                $arr = ['name'=>$m->name];
+                if($comment === true){
+                    $arr['docComment'] = $this->get_method_comment($r, $m->name);
+                }
+                $methods[] = $arr;
+            }
+                
         }
         
         return $methods;
+    }
+    
+    public function get_method_comment($obj,$method){
+        $comment = $obj->getMethod($method)->getDocComment();
+        //define the regular expression pattern to use for string matching
+        $pattern = "#(@[a-zA-Z]+\s*[a-zA-Z0-9, ()_].*)#";
+
+        //perform the regular expression on the string provided
+        preg_match_all($pattern, $comment, $matches, PREG_PATTERN_ORDER);
+        $comments = [];
+        foreach($matches[0] as $match){
+            $comments[] = preg_split('/[\s]/',$match, 2);
+        }
+        
+        return $comments;
     }
 }

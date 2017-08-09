@@ -8,16 +8,21 @@ class Reports extends My_Controller {
         parent::__construct();
     }
 
+    /**
+     * This is the index function
+     * @AclName Listing Page 
+     * 
+     */
     public function index() {
         echo $msg = __CLASS__ . ' - ' . __FUNCTION__ . '<br />';
         log_message('debug',$msg);
     }
 
-    public function show() {
-        echo $msg = __CLASS__ . ' - ' . __FUNCTION__ . '<br />';
-        log_message('debug',$msg);
-    }
-
+    
+    /**
+     * This is the org list
+     * @AclName Org List
+     */
     public function orglist() {
         echo $msg = __CLASS__ . ' - ' . __FUNCTION__ . '<br />';
         log_message('debug',$msg);
