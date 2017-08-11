@@ -4,7 +4,7 @@ class Acl extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('AclModel');
+        $this->load->model('AcoModel');
     }
 
     public function index() {
@@ -39,7 +39,7 @@ class Acl extends MY_Controller {
                     $methods = $this->get_class_methods($class, true);
                     foreach($methods as $method){
                         if(isset($method['docComment']['AclName'])){
-                            $this->AclModel->save(['class'=>$class, 'method'=>$method['name'], 'display_name'=>$method['docComment']['AclName']]);
+                            $this->AcoModel->save(['class'=>$class, 'method'=>$method['name'], 'display_name'=>$method['docComment']['AclName']]);
                         }
                     }
                     
