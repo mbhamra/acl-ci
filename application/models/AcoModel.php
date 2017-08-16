@@ -1,39 +1,23 @@
 <?php
 
-class AcoModel extends CI_Model {
+class AcoModel extends MY_Model {
 
-    private $table = 'aco';
-    private $alias = 'aco';
+    protected $table = 'aco';
+    protected $alias = 'aco';
 
     public function save($data) {
-        if($this->getBy($data,true) > 0){
-            $this->update($data);
+        $conditions = [
+            'class'=>$data['class'],
+            'method' => $data['method']
+            ];
+        
+        if($this->getBy($conditions,true) > 0){
+            $result = $this->getBy($conditions);
+            $data['id'] = $result[0]['id'];
+            return $this->update($data);
         } else {
-            $this->insert($data);
+            return $this->insert($data);
         }
     }
     
-    /**
-     * 
-     * @param type $conditions = array()
-     * @param type $count true = get num of rows, false = get records 
-     * @return type
-     */
-    public function getBy($conditions=[], $count = false){
-        $query = $this->db->where($conditions)
-                        ->get($this->table);
-        if($count === true){
-            return $query->num_rows();
-        }
-        return $query->result_array();
-    }
-    
-    public function insert($data){
-        
-    }
-    
-    public function update($data){
-        
-    }
-
 }
