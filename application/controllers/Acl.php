@@ -4,20 +4,26 @@ class Acl extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('AcoModel');
+        $this->load->model('AcosModel');
     }
 
-    public function index() {
-        exit(__FUNCTION__);
-    }
-
+    /**
+     * fetch the controllers and methods and save it into database 
+     */
     public function fetch() {
         $this->listFolderFiles();
     }
 
+    /**
+     * List Folder Files
+     * 
+     * @param string $dir
+     * @return type
+     */
     public function listFolderFiles($dir = null) {
-        if ($dir === null)
+        if ($dir === null){
             $dir = constant('APPPATH') . 'controllers/';
+        }
         
         $ffs = scandir($dir);
 
@@ -39,7 +45,7 @@ class Acl extends MY_Controller {
                     $methods = $this->get_class_methods($class, true);
                     foreach($methods as $method){
                         if(isset($method['docComment']['AclName'])){
-                            $this->AcoModel->save(['class'=>$class, 'method'=>$method['name'], 'display_name'=>$method['docComment']['AclName']]);
+                            $this->AcosModel->save(['class'=>$class, 'method'=>$method['name'], 'display_name'=>$method['docComment']['AclName']]);
                         }
                     }
                     

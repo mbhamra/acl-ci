@@ -3,9 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/projects/ci/application/controllers/Acl.php</file>
-            <file>file:/var/www/html/projects/ci/application/core/MY_Model.php</file>
-            <file>file:/var/www/html/projects/ci/application/models/AcoModel.php</file>
+            <file>file:/var/www/html/projects/ci/application/models/UsersModel.php</file>
+            <file>file:/var/www/html/projects/ci/application/core/MY_Controller.php</file>
         </group>
     </open-files>
 </project-private>

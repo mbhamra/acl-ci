@@ -21,28 +21,42 @@ class MY_Model extends CI_Model {
         return $query->result_array();
     }
     
-    public function insert($data){
-        if(isset($data['id'])) unset($data['id']);
-        try{
-            $this->db->insert($this->table, $data);
+    protected function insert($insert){
+        
+        return $this->insertBatch([$insert]);
+    }
+    
+    protected function insertBatch($insert){
+        if($this->db->insert_batch($this->table, $insert)){
+            log_message('debug',$this->db->last_query());
+            $this->insert_id = $this->db->insert_id();
             return true;
-        } catch(Exception $err){
-            log_message('error','inserting in '.$this->table.' table and error occur - ' . $err->getMessage());
+        } else {
             return false;
         }
     }
     
-    public function update($data){
-        $id = $data['id'];
-        unset($data['id']);
+    protected function update($update, $id){
+        $condition = ['ID'=>$id];
         
-        try{
-            $this->db->where('id',$id)->update($this->table, $data);
+        if($this->db->update($this->table, $update, $condition)){
+            log_message('debug',$this->db->last_query());
             return true;
-        } catch(Exception $err){
-            log_message('error','updating ' . $this->table . ' table error - ' . $err->getMessage());
+        } else {
+            log_message('debug','Table- ' . $this->table . ' Record not updated');
+            log_message('debug',$this->db->last_query());
             return false;
         }
-        
+    }
+    
+    protected function removeBatch($conditions){
+        log_message('info', 'Starting remove records in batch -Table: ' . $this->table);
+        foreach($conditions AS $condition){
+            
+            $this->db->delete($this->table, $condition);
+            log_message('debug',$this->db->last_query());
+            $this->db->reset_query();
+        }
+        log_message('info','Removed records in batch -Table: ' . $this->table);
     }
 }

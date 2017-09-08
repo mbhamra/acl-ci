@@ -7,15 +7,41 @@
  */
 
 class MY_Controller extends CI_Controller{
+    
+    private $layout = 'home';
     public function __construct(){
         parent::__construct();
         //$this->output->enable_profiler(true);
     }
     
-    public function loadFrontView($file, $data){
-        $this->load->view('layout/header', $data);
-        $this->load->view($file, $data);
-        $this->load->view('layout/footer', $data);
-        
+    /**
+     * render the view with layout
+     * 
+     * @param type $page
+     * @param type $data
+     */
+    protected function render($page, $data=[]){
+        log_message('info','Loading view : ' . $page . ' with layout:' . $this->getLayout());
+        $this->load->view($this->getLayout(),['template'=>$page,'data'=>$data]);
+    }
+    
+    /**
+     * set layout
+     * 
+     * @param type $layout
+     * @return \MY_Controller
+     */
+    protected function setLayout($layout){
+        $this->layout = $layout;
+        return $this;
+    }
+    
+    /**
+     * get layout
+     * 
+     * @return layout
+     */
+    protected function getLayout(){
+        return 'layouts/'.$this->layout;
     }
 }

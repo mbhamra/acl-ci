@@ -1,9 +1,9 @@
 <?php
 
-class AclModel extends MY_Model {
+class UserRolesModel extends MY_Model {
 
-    protected $table = 'acl';
-    protected $alias = 'a';
+    protected $table = 'user_roles';
+    protected $alias = 'ur';
 
     public function getList($conditions = [], $count = false, $limit = 0, $offset = 0) {
         $table = $this->table;
@@ -25,47 +25,48 @@ class AclModel extends MY_Model {
         }
     }
     
-    public function getByRoleID($role_id){
-        return $this->getList(['role_id'=>$role_id]);
+    public function getByUserID($user_id){
+        return $this->getList(['user_id'=>$user_id]);
     }
     
     public function saveBatch($data) {
         $insert = [];
-        if (isset($data['acos'])) {
+        if (isset($data['roles'])) {
 
-            $records = $this->getList(['role_id' => $data['role_id']], true);
+            $records = $this->getList(['user_id' => $data['user_id']], true);
             if (empty($records)) {
-                foreach ($data['acos'] AS $aco) {
+                foreach ($data['roles'] as $role) {
                     $insert[] = [
-                        'role_id' => $data['role_id'],
-                        'aco_id' => $aco
+                        'user_id' => $data['user_id'],
+                        'role_id' => $role
                     ];
                 }
                 return $this->insertBatch($insert);
             } else {
-                $records = $this->getListByGroup(['role_id' => $data['role_id']]);
+                $records = $this->getListByGroup(['user_id' => $data['user_id']]);
 
-                $acos = strpos($records[0]['acos'], ',') === false ? [$records[0]['acos']] : explode(', ', $records[0]['acos']);
+                $roles = strpos($records[0]['roles'], ',') === false ? [$records[0]['roles']] : explode(', ', $records[0]['roles']);
 
-                $inserts = array_diff($data['acos'], $acos);
-                $removes = array_diff($acos, $data['acos']);
+                $inserts = array_diff($data['roles'], $roles);
+                $removes = array_diff($roles, $data['roles']);
 
                 if (!empty($inserts)) {
                     $insert = [];
                     foreach ($inserts as $val) {
                         $insert[] = [
-                            'role_id' => $data['role_id'],
-                            'aco_id' => $val
+                            'role_id' => $val,
+                            'user_id' => $data['user_id']
                         ];
                     }
                     $this->insertBatch($insert);
                 }
+                
                 if (!empty($removes)) {
                     $remove = [];
                     foreach ($removes as $val) {
                         $remove[] = [
-                            'role_id' => $data['role_id'],
-                            'aco_id' => $val
+                            'role_id' => $val,
+                            'user_id' => $data['user_id']
                         ];
                     }
                     $this->removeBatch($remove);
@@ -77,14 +78,14 @@ class AclModel extends MY_Model {
     }
     
     protected function getListByGroup($conditions){
-        $this->db->select('GROUP_CONCAT('. $this->alias .'.aco_id SEPARATOR ",") as acos ')
+        $this->db->select('GROUP_CONCAT('. $this->alias .'.role_id SEPARATOR ",") as roles ')
                 ->where($conditions)
                 ->from($this->table.' as '.$this->alias);
 
         return $this->db->get()->result_array();
 
     }
-
+    
     /**
      * delete by role
      * 
@@ -94,7 +95,8 @@ class AclModel extends MY_Model {
      * @return boolean
      */
     public function deleteByRole($role_id){
-        $this->db->where(['role_id' => $role_id])->delete($this->table);
+        $this->db->where(['role_id'=>$role_id])->delete($this->table);
         return true;
     }
+
 }
