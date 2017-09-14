@@ -31,6 +31,7 @@ class Users extends My_Controller {
                 
                 $data = $this->input->post(); //get formatted data
                 $this->_save($data);
+                redirect('users');
             } else {
                 log_message('info','form validation errors');
                 $data = $this->input->post(); //get un-formatted data

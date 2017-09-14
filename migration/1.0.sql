@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -65,8 +65,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `user_roles` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `role_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -154,3 +153,15 @@ ALTER TABLE `user_roles`
   ADD CONSTRAINT `ur_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   ADD CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
+
+/** insert records **/
+
+INSERT INTO `roles` (`name`) VALUES('Guest');
+INSERT INTO `roles` (`name`) VALUES('Default');
+set @role_id = LAST_INSERT_ID();
+INSERT INTO `acl` (`aco_id`, `role_id`) select `id`, @role_id as `role_id` from `acos`;
+
+-- password is admin --
+INSERT INTO `users` (`name`, `username`, `password`) VALUES('Admin', 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a8'); 
+
+INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES(LAST_INSERT_ID(), @role_id);

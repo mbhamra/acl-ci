@@ -16,3 +16,20 @@ if(!function_exists('br')){
         return $content;
     }
 }
+
+//check hasPermission function exists
+if(!function_exists('hasPermission')){
+   
+    /**
+     * check user has permission
+     * 
+     * @param string $class
+     * @param string $method
+     * @return boolean
+     */
+    function hasPermission($class, $method){
+        
+        $acl = ACL::get_instance();
+        return $acl->hasPermission($class, $method);
+    }
+}

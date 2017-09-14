@@ -26,6 +26,12 @@ class RolesModel extends MY_Model {
         }
     }
 
+    /**
+     * get by id
+     * 
+     * @param type $id
+     * @return array
+     */
     public function getById($id){
         $conditions = [
             'id' => $id,
@@ -37,6 +43,26 @@ class RolesModel extends MY_Model {
         return $roles;
     }
     
+    /**
+     * get guest group
+     * 
+     * @return array
+     */
+    public function getGuestGroup(){
+        $conditions = [
+            'name' => 'Guest'
+        ];
+        $group = $this->getList($conditions);
+        if(!empty($group)){
+            $group = $group[0];
+            $this->load->model('AcosModel');
+            $ids = strpos($group['acos'], ',') === false? $group['acos'] : explode(', ', $group['acos']);
+            $group['acos'] = $this->AcosModel->getByMultiId($ids);
+            
+            return $group;
+        }
+        return [];
+    }
     
     /**
      * check name exists 

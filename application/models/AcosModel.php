@@ -5,6 +5,15 @@ class AcosModel extends MY_Model {
     protected $table = 'acos';
     protected $alias = 'acos';
 
+    /**
+     * get list
+     * 
+     * @param array $conditions
+     * @param boolean $count
+     * @param int $limit
+     * @param int $offset
+     * @return array $acos
+     */
     public function getList($conditions = [], $count = false, $limit = 0, $offset = 0) {
         $table = $this->table;
         $alias = $this->alias;
@@ -26,6 +35,12 @@ class AcosModel extends MY_Model {
         }
     }
 
+    /**
+     * get by id
+     * 
+     * @param int $id
+     * @return array $acos
+     */
     public function getByID($id){
         $conditions = [
             'id' => $id,
@@ -33,13 +48,33 @@ class AcosModel extends MY_Model {
         ];
         $roles = $this->getList($conditions);
         if(!empty($roles)){
-            $this->load->model('AclModel');
-            //$roles[0]['Permission'] = $this->RolePermissionModel->getByRoleID($id);
+            //$this->load->model('AclModel');
         }
         
         return $roles;
     }
     
+    /**
+     * get by multiple id
+     * 
+     * @param array $ids
+     * @return array $acos
+     */
+    public function getByMultiId($ids){
+        
+        $acos = $this->db->where_in('id', $ids)
+                ->from($this->table)
+                ->get()
+                ->result_array();
+        return $acos;
+    }
+    
+    /**
+     * save record
+     * 
+     * @param array $data
+     * @return boolean
+     */
     public function save($data) {
         $conditions = [
             'class'=>$data['class'],
@@ -48,8 +83,9 @@ class AcosModel extends MY_Model {
         
         if($this->getBy($conditions,true) > 0){
             $result = $this->getBy($conditions);
-            $data['id'] = $result[0]['id'];
-            return $this->update($data);
+            $id = $result[0]['id'];
+            
+            return $this->update($data, $id);
         } else {
             return $this->insert($data);
         }

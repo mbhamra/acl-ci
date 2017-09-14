@@ -2,109 +2,160 @@
 /**
  * This class will be called by the post_controller_constructor hook and act as ACL
  * 
- * @author ChristianGaertner
+ * @author Manmohan
  */
 class ACL {
-    
-    /**
-     * Array to hold the rules
-     * Keys are the role_id and values arrays
-     * In this second level arrays the key is the controller and value an array with key method and value boolean
-     * @var Array 
-     */
-    private $perms;
-    /**
-     * The field name, which holds the role_id
-     * @var string 
-     */
-    private $role_field;
 
     private $CI;
+    private $user;
+    private static $instance;
+    
     /**
-     * Contstruct in order to set rules
-     * @author ChristianGaertner
+     * Constructor
      */
     public function __construct() {
-        $this->role_field = 's_roleField';
         $this->CI =& get_instance();
-        //$acl = $this->CI->db->select('acl.controller, acl.method')->join('acl','acl.id = acl_users.acl_id')->where('user_id',1)->get('acl_users')->result_array();
-        //print_r($acl);die;
-        
-        /*
-        $this->perms[0]['home']['index']        = true;
-        $this->perms[0]['home']['about']        = true;
-        $this->perms[1]['user']['dashboard']    = true;
-        $this->perms[1]['user']['edit']         = true;
-        $this->perms[1]['user']['show']         = true;
-        $this->perms[2]['admin']['dashboard']   = true;
-        $this->perms[3]['admin']['settings']    = true;*/
+        self::$instance = $this;
     }
-
-    public function recursive($arr){
-
-    }
-
+    
     /**
-     * The main method, determines if the a user is allowed to view a site
-     * @author ChristianGaertner
+     * get instance of this class
+     * 
+     * @return \ACL
+     */
+    public static function get_instance(){
+        return self::$instance;
+    }
+    
+    /**
+     * check authorisation the user to access the page
+     */
+    public function auth(){
+        
+        $CI = $this->CI;
+        
+        
+        // check guess acces
+        if($this->_checkGuestAccess()){
+            return true;
+        }
+        
+        //get logged in user details with acl
+        $user = $this->getLoggedInUser();
+        
+        //validate user has permission to view this page
+        if(!$this->_validateActionPermission($user['acl'])){
+            //check user logged in or not
+            if(empty($user)){
+                //user not found
+                redirect('login');
+            } else {
+                //user logged in but not have permission to view this page
+                exit('unauthorized');
+                //redirect('unauthorized');
+            }
+            
+        }
+        
+        if(!empty($user)){
+            //user authorize to view this page
+        } else {
+            
+            redirect('/login');
+        }
+        
+    }
+    
+    /**
+     * get logged in user
+     * 
+     * @return array
+     */
+    public function getLoggedInUser(){
+        $CI = $this->CI;
+        $user = $CI->session->userdata('user');
+        
+        if(!empty($this->user)){
+            return $this->user;
+        }
+        if (is_numeric($user)){
+            //load users model
+            $CI->load->model('UsersModel');
+            //get detail with acl by id
+            $user = $CI->UsersModel->getDetailWithAclById($user);   
+        }
+        $this->user = $user;
+        return $user;
+    }
+    
+    /**
+     * check guest accessibility
+     * 
+     * @param string $class
+     * @param string $method
      * @return boolean
      */
-    public function auth()
-    {
-        return true;
-        $CI = $this->CI;
-        if (!isset($CI->session))
-        { # Sessions are not loaded
-            $CI->load->library('session');
+    private function _checkGuestAccess($class = null, $method = null){
+        $group = $this->CI->session->userdata('groups.guest');
+        if(empty($group)){
+            $this->CI->load->model('RolesModel');
+            $group = $this->CI->RolesModel->getGuestGroup();
+            $this->CI->session->set_userdata('groups.guest',$group);
         }
         
-        if (!isset($CI->router))
-        { # Router is not loaded
-            $CI->load->library('router');
+        return $this->_validateActionPermission($group['acos'], $class, $method);
+    }
+    
+    /**
+     * validate action permissions
+     * 
+     * @param array $acos
+     * @param string $class
+     * @param string method
+     * @return boolean
+     */
+    private function _validateActionPermission($acos, $class=null, $method=null){
+        //check acos is not empty
+        if(empty($acos)){
+            return false;
+        }
+        if(empty($class)){
+            $class = $this->CI->router->fetch_class();
+        }
+        if(empty($method)){
+            $method = $this->CI->router->fetch_method();
         }
         
-        
-        $class = $CI->router->fetch_class();
-        $method = $CI->router->fetch_method();
-        // Is rule defined?
-        $is_ruled = false;
-        foreach ($this->perms as $role)
-        { # Loop through all rules
-            if (isset($role[$class][$method]))
-            { # For this role exists a rule for this route
-                $is_ruled = true;
-            }
-        }
-        if (!$is_ruled)
-        { # No rule defined for this route
-            // ignording the ACL
-            return;
-        }
-        
-        
-        if ($CI->session->userdata($this->role_field))
-        { # Role_ID successfully determined ==> User is logged in
-            if ($this->perms[$CI->session->userdata($this->role_field)][$class][$method])
-            { # The user is allowed to enter the site
+        foreach($acos AS $aco){
+            //check user has access permission for class and method
+            if(strtolower($aco['class']) == strtolower($class) && strtolower($aco['method']) == strtolower($method)){
+                //user has permission to access this page
                 return true;
             }
-            else
-            { # The user does not have permissions
-                $CI->error->show(403);
-            }
         }
-        else
-        { # not logged in
-            if ($this->perms[0][$class][$method])
-            { # The user is allowed to enter the site
-                return true;
-            }
-            else
-            { # The user does not have permissions
-                $CI->error->show(403);
-            }
+        //user has not permission to access this page
+        return false;
+    }
+    
+    /**
+     * check has permission
+     * 
+     * @param string $class
+     * @param string $method
+     * @return boolean
+     */
+    public function hasPermission($class, $method){
+        //check guest access
+        if($this->_checkGuestAccess($class, $method)){
+            return true;
         }
         
-        
+        $user = $this->user;
+        //check user empty or not
+        if(!empty($user) && isset($user['acl'])){
+            //validate link and return boolean
+            return $this->_validateActionPermission($user['acl'], $class, $method);
+        }
+        return false;
     }
 }

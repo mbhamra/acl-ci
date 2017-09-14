@@ -17,17 +17,10 @@ class Welcome extends My_Controller {
     }
 
     /**
-     * This is the org list
-     * @AclName Restricted
-     */
-    public function restricted() {
-        echo 'you are authorized to view this page.';
-    }
-    
-    /**
      * unauthorized page
      */
     public function unauthorized(){
+        http_response_code(401);
         echo 'you are unauthorized to view page';
     }
 }

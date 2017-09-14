@@ -136,14 +136,37 @@ class UsersModel extends MY_Model {
      */
     public function verifyLogin($username, $password){
         $user = $this->getList(['username'=>$username]);
+        
         if(!empty($user)){
+            
             if($user[0]['password'] === $this->_hashPassword($password)){
                 //valid user
-                return $user[0];
+                $user = $user[0];
+                
+                return $user;
             }
         }
         //login credentials wrong
         return [];
+    }
+    
+    /**
+     * get user detail with acl by id
+     * 
+     * @param int $id
+     * @return array $user
+     */
+    public function getDetailWithAclById($id){
+        $user = $this->getList(['id'=>$id]);
+        if(!empty($user)){
+            $user = $user[0];
+            $roles = strpos($user['roles'], ',') === false? $user['roles'] : explode(', ', $user['roles']);
+            
+            $this->load->model('AclModel');
+            //get roles by multiple roles for get high performance without use the join tables
+            $user['acl'] = $this->AclModel->getByRoles($roles);
+        }
+        return $user;
     }
     
     /**

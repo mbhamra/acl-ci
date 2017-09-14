@@ -9,9 +9,11 @@
 class MY_Controller extends CI_Controller{
     
     private $layout = 'home';
+    
     public function __construct(){
         parent::__construct();
         //$this->output->enable_profiler(true);
+        
     }
     
     /**
@@ -21,6 +23,8 @@ class MY_Controller extends CI_Controller{
      * @param type $data
      */
     protected function render($page, $data=[]){
+        $acl = ACL::get_instance();
+        $data['loggedUser'] = $acl->getLoggedInUser();
         log_message('info','Loading view : ' . $page . ' with layout:' . $this->getLayout());
         $this->load->view($this->getLayout(),['template'=>$page,'data'=>$data]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-class Acl extends MY_Controller {
+class Acos extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -9,9 +9,12 @@ class Acl extends MY_Controller {
 
     /**
      * fetch the controllers and methods and save it into database 
+     * @AclName Acos Fetch
      */
     public function fetch() {
+        
         $this->listFolderFiles();
+        redirect('login');
     }
 
     /**

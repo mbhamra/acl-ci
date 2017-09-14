@@ -23,7 +23,7 @@ class Login extends MY_Controller{
                 $data = $this->input->post();
                 $user = $this->UsersModel->verifyLogin($data['username'], $data['password']);
                 if(!empty($user)){
-                    $this->session->set_userdata('user',$user);
+                    $this->session->set_userdata('user',$user['id']);
                     $this->session->set_userdata('logged_in',true);
                     redirect('/users/');
                 } else {
@@ -43,6 +43,7 @@ class Login extends MY_Controller{
     public function logout(){
         $this->session->unset_userdata('user');
         $this->session->unset_userdata('logged_in');
+        $this->session->unset_userdata('groups.guest');
         redirect('/login');
     }
     

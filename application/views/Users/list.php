@@ -1,4 +1,4 @@
-<a href="<?php echo base_url('/index.php/users/register') ?>">Register User</a><br/>
+
 <table border="1" style="border-collapse: collapse">
     <thead>
         <tr>
@@ -17,7 +17,7 @@
             <td><?php echo $user['id'] ?></td>
             <td><?php echo $user['name'] ?></td>
             <td><?php echo $user['username'] ?></td>
-            <td><a href="<?php echo base_url('/index.php/users/edit/'.$user['id']);  ?>">Edit</a></td>
+            <td><?php if(hasPermission('users','edit')) { echo anchor('/index.php/users/edit/'.$user['id'], 'Edit'); } ?></td>
         </tr>
         <?php
         }

@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/var/www/html/projects/ci/application/controllers/Login.php</file>
+            <file>file:/var/www/html/projects/ci/application/hooks/acl.php</file>
             <file>file:/var/www/html/projects/ci/application/models/UsersModel.php</file>
+            <file>file:/var/www/html/projects/ci/application/models/RolesModel.php</file>
+            <file>file:/var/www/html/projects/ci/application/models/AclModel.php</file>
+            <file>file:/var/www/html/projects/ci/application/models/AcosModel.php</file>
             <file>file:/var/www/html/projects/ci/application/core/MY_Controller.php</file>
         </group>
     </open-files>
