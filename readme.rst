@@ -22,6 +22,15 @@ This library uses the active record classes. So make sure _$active_record_ is se
 You are able to have your table and fields named however you like. Those modifications will need to be reflected in the
 AclModel.php, AcosModel.php, UsersModel.php, RolesModel.php, UserRolesModel.php files in model folder. 
 
+**Instructions**
+#Add @AclName attribute and comment before method for add controller and method in acl functionality 
+	Example (in controller method)
+	/**
+	*
+	* @AclName Name_You_Want
+	*/
+and then click on fetchNewPermission link on top of the web page, it will fetch all methods with associated @AclName keyword
+
 # **check permission for link in controller or view by using hasPermission function**
 
 	if(hasPermission($class, $method)){
