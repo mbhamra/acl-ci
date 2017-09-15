@@ -27,7 +27,7 @@
                 <?php
             }
             ?>
-            
+            <a href="<?php echo base_url('index.php/acos/fetch'); ?>">Fetch Permission</a> 
         </header>
         <hr />
         <div class="container">
