@@ -41,5 +41,5 @@ hasPermission function will check that user has permission to access the class a
 
 
 ################################################
- for support, mail me at info@mandiguru.co.in 
+ for support, mail me at m m s i n g h 6 2@gmail.com 
 ################################################
