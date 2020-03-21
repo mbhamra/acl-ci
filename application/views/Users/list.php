@@ -18,6 +18,7 @@
             <td><?php echo $user['name'] ?></td>
             <td><?php echo $user['username'] ?></td>
             <td><?php if(hasPermission('users','edit')) { echo anchor('/users/edit/'.$user['id'], 'Edit'); } ?></td>
+
         </tr>
         <?php
         }

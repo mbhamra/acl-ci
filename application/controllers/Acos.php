@@ -43,10 +43,12 @@ class Acos extends MY_Controller {
                 $this->listFolderFiles($dir . '/' . $ff);
             elseif (is_file($dir . '/' . $ff) && strpos($ff,'.php') !== false) {
                 $classes = $this->get_php_classes(file_get_contents($dir . '/' . $ff));
+
                 foreach($classes AS $class){
                     if(!class_exists($class)){
                         include_once($dir.$ff);
                     }
+
                     $methods = $this->get_class_methods($class, true);
                     foreach($methods as $method){
                         if(isset($method['docComment']['AclName'])){
