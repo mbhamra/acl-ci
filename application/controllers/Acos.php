@@ -27,7 +27,7 @@ class Acos extends MY_Controller {
         if ($dir === null){
             $dir = constant('APPPATH') . 'controllers/';
         }
-
+        
         $ffs = scandir($dir);
 
         unset($ffs[0], $ffs[1]);
@@ -43,12 +43,8 @@ class Acos extends MY_Controller {
                 $this->listFolderFiles($dir . '/' . $ff);
             elseif (is_file($dir . '/' . $ff) && strpos($ff,'.php') !== false) {
                 $classes = $this->get_php_classes(file_get_contents($dir . '/' . $ff));
-
+                include_once($dir.'/'.$ff);
                 foreach($classes AS $class){
-                    if(!class_exists($class)){
-                        include_once($dir.$ff);
-                    }
-
                     $methods = $this->get_class_methods($class, true);
                     foreach($methods as $method){
                         if(isset($method['docComment']['AclName'])){
